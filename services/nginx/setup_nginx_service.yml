@@ -1,0 +1,83 @@
+- name: Create Docker service on Swarm cluster
+  hosts: _manager
+  become: true
+  vars:
+    service_name: nginx
+    image_name: agrimitra-nginx
+    image_tag: latest
+    replicas: 1
+    container_port: 443
+    published_port: 443
+    env_vars: 
+    fullchain: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx fullchain') }}"
+    privkey: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx privkey') }}"
+  tasks:
+    - name: Copy file from host to machine
+      copy:
+        src: "{{ playbook_dir }}"
+        dest:  .
+
+    - name: Create a certificates dir if it does not exist
+      ansible.builtin.file:
+        path: /nginx/certificates
+        state: directory
+        mode: '0755'
+    
+    - name: Create a agrimitra.samagra.io dir if it does not exist
+      ansible.builtin.file:
+        path: /nginx/certificates/agrimitra.samagra.io
+        state: directory
+        mode: '0755'
+    
+    - name: Create fullchain.pem
+      copy:
+        dest: /nginx/certificates/agrimitra.samagra.io/fullchain.pem
+        content: |
+          {fullchain}
+    
+    - name: Create privkey.pem
+      copy:
+        dest: /nginx/certificates/agrimitra.samagra.io/privkey.pem
+        content: |
+          {privkey}
+
+    - name: Build Docker image
+      docker_image:
+        name: "{{ image_name }}"
+        tag: "{{ image_tag }}"
+        build:
+          path: /home/ubuntu/nginx
+        force_tag: true
+        state: present
+        source: build
+        force_source: true
+
+    - name: Verify if service exists
+      docker_swarm_info:
+        services_filters:
+          name: "{{ service_name }}"
+        services: yes
+      register: swarm_service
+
+    - name: Create Docker service
+      docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ image_tag }}"
+        replicas: "{{ replicas }}"
+        force_update: "yes"
+        logging:
+          driver: syslog
+          options:
+            syslog-address: "udp://10.3.1.6:12201"
+            tag: nginx
+        placement:
+          constraints:
+            - node.role == manager
+        env:
+          "{{ env_vars }}"
+        publish:
+          - published_port: "{{ published_port }}"
+            target_port: "{{ container_port }}"
+            protocol: tcp
+            mode: ingress
+        state: present

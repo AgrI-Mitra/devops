@@ -1,0 +1,41 @@
+- name: Create Docker service on Swarm cluster
+  hosts: _manager
+  become: true
+  vars:
+    service_name: user-service
+    image_name: samagragovernance/esamwad-user-service
+    image_tag: latest
+    replicas: 1
+    container_port: 3000
+    published_port: 3005
+  tasks:
+    - name: Verify if service exists
+      docker_swarm_info:
+        services_filters:
+          name: "{{ service_name }}"
+        services: yes
+      register: swarm_service
+
+    - name: Create Docker service
+      docker_swarm_service:
+        name: "{{ service_name }}"
+        image: "{{ image_name }}:{{ image_tag }}"
+        replicas: "{{ replicas }}"
+        logging:
+          driver: syslog
+          options:
+            syslog-address: "udp://10.3.1.6:12201"
+            tag: user-service
+        placement:
+          constraints:
+            # - node.labels.node_vm_type == non_gpu
+            - node.role == worker
+        force_update: yes
+        env:
+          "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/user_service') }}"
+        publish:
+          - published_port: "{{ published_port }}"
+            target_port: "{{ container_port }}"
+            protocol: tcp
+            mode: ingress
+        state: present
