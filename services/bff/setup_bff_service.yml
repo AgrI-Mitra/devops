@@ -2,9 +2,9 @@
   hosts: _manual
   become: true
   vars:
-    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/bff_timescaledb') }}"
+    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/bff_timescaledb url=http://10.3.1.5:8200') }}"
   tasks:
-    - name: Create a fusionauth dir if it does not exist
+    - name: Create a bff dir if it does not exist
       ansible.builtin.file:
         path: /bff
         state: directory

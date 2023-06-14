@@ -1,0 +1,22 @@
+- name: Setup stateful services
+  hosts: _manual
+  become: true
+  tasks:
+    - name: Create a jenkins dir if it does not exist
+      ansible.builtin.file:
+        path: /jenkins
+        state: directory
+        mode: '0755'
+
+    - name: Copy file from host to machine
+      copy:
+        src: "{{ playbook_dir }}/docker-compose.yml"
+        dest: /jenkins/docker-compose.yml
+
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: /jenkins/
+      register: output
+
+    - debug:
+        var: output

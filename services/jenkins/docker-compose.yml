@@ -1,0 +1,23 @@
+version: '3.6'
+services:
+  jenkins:
+      image: jenkins/jenkins:lts
+      restart: unless-stopped
+      privileged: true
+      user: root
+      logging:
+        driver: syslog
+        options:
+          syslog-address: "udp://10.1.1.5:12201"
+          tag: jenkins
+      ports:
+        - 8080:8080
+      container_name: jenkins
+      volumes:
+        - jenkins_volume:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/local/bin/docker:/usr/local/bin/docker
+
+volumes:
+
+  jenkins_volume:
