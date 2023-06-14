@@ -1,5 +1,6 @@
-- import_playbook: services/vault/setup_vault_service.yml
+# - import_playbook: services/vault/setup_vault_service.yml
 - import_playbook: services/nginx/setup_nginx_service.yml
 - import_playbook: services/fusionauth/setup_fusionauth_service.yml
 - import_playbook: services/ts/setup_ts_service.yaml
 - import_playbook: services/user-service/setup_user_service.yaml
+- import_playbook: services/bff/setup_bff_service.yml
