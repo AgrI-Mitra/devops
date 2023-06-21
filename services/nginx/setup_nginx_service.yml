@@ -9,8 +9,8 @@
     container_port: 443
     published_port: 443
     env_vars: 
-    fullchain: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx fullchain') }}"
-    privkey: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx privkey') }}"
+    fullchain: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx:fullchain') }}"
+    privkey: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx:privkey') }}"
   tasks:
     - name: Copy file from host to machine
       copy:
@@ -33,13 +33,13 @@
       copy:
         dest: /nginx/certificates/agrimitra.samagra.io/fullchain.pem
         content: |
-          {fullchain}
+          {{ fullchain }}
     
     - name: Create privkey.pem
       copy:
         dest: /nginx/certificates/agrimitra.samagra.io/privkey.pem
         content: |
-          {privkey}
+          {{ privkey }}
 
     - name: Build Docker image
       docker_image:
