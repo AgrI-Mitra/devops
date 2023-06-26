@@ -3,7 +3,7 @@
   become: true
   vars:
     service_name: user-service
-    image_name: ghcr.io/agri-mitra/user-service:master
+    image_name: ghcr.io/agri-mitra/user-service
     image_tag: master
     replicas: 1
     container_port: 3000
