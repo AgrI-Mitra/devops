@@ -46,7 +46,7 @@
   become: true
   vars:
     service_name: ts
-    image_name: ghcr.io/samagra-comms/transport-socket
+    image_name: ghcr.io/agri-mitra/transport-socket
     image_tag: akai
     replicas: 
     container_port: 3000
