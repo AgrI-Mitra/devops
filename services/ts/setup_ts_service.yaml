@@ -27,7 +27,7 @@
   hosts: _worker
   become: true
   vars:
-    image_name: ghcr.io/samagra-comms/transport-socket
+    image_name: ghcr.io/agri-mitra/transport-socket
     image_tag: akai
   tasks:
     - name: pull an image
