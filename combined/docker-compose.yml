@@ -1,0 +1,63 @@
+version: '3.6'
+services:
+  bff_timescaledb:
+    container_name: bff_timescaledb
+    image: samagragovernance/postgres:latest-pg15
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - bff_pgdata:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+  
+  ts-cache:
+    container_name: ts-cache
+    image: redis:latest
+    env_file:
+      - ./.env
+    ports:
+      - '6379:6379'
+    command: [ 'redis-server', '--appendonly', 'yes' ]
+    hostname: redis
+    volumes:
+      - redis_data:/data
+      - redis_conf:/usr/local/etc/redis/redis.conf
+
+  ts:
+    container_name: ts
+    depends_on:
+      - ts-cache
+    image: ghcr.io/samagra-comms/transport-socket:akai
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+
+  agrimitra-nginx:
+    depends_on:
+      - bff
+    #image: agrimitra-nginx:latest
+    container_name: agrimitra-nginx
+    build: 
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+  
+  bff:
+    container_name: bff
+    depends_on:
+      - bff_timescaledb
+      - ts
+    image: ghcr.io/agri-mitra/bff:main
+    restart: always
+    ports:
+      - "8081:3000"
+    env_file:
+      - ./.env
+
+volumes:
+  bff_pgdata:
+  redis_data:
+  redis_conf:
