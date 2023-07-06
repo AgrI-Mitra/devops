@@ -28,7 +28,7 @@ services:
     container_name: ts
     depends_on:
       - ts-cache
-    image: ghcr.io/samagra-comms/transport-socket:akai
+    image: ghcr.io/agri-mitra/transport-socket:akai
     ports:
       - "3000:3000"
     env_file:
@@ -37,7 +37,6 @@ services:
   agrimitra-nginx:
     depends_on:
       - bff
-    #image: agrimitra-nginx:latest
     container_name: agrimitra-nginx
     build: 
       context: ./nginx
@@ -56,6 +55,17 @@ services:
     restart: always
     ports:
       - "8081:3000"
+    env_file:
+      - ./.env
+
+  app:
+    container_name: app
+    depends_on:
+      - bff
+    image: ghcr.io/agri-mitra/app:production
+    restart: always
+    ports:
+      - "8080:3000"
     env_file:
       - ./.env
 
