@@ -43,3 +43,9 @@
         name: docker-compose
         state: present
         executable: pip3
+
+    - name: Install jsondiff for Python
+      pip:
+        name: jsondiff
+        state: present
+        executable: pip3

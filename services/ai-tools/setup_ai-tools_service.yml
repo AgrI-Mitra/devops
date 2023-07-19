@@ -24,9 +24,9 @@
           {% endfor %}
 
     - name: Start services
-        docker_stack:
-          state: present
-          name: ai-tools
-          compose:
-            - /ai-tools/docker-compose.yml
+      docker_stack:
+        state: present
+        name: ai-tools
+        compose:
+          - /ai-tools/docker-compose.yml
 
