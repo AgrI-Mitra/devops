@@ -1,0 +1,32 @@
+- name: Setup stateful services
+  hosts: _manager
+  become: true
+  vars:
+    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/ai-tools url=http://10.3.1.5:8200') }}"
+  tasks:
+    - name: Create a ai-tools dir if it does not exist
+      ansible.builtin.file:
+        path: /ai-tools
+        state: directory
+        mode: "0755"
+
+    - name: Copy file from host to machine
+      copy:
+        src: "{{ playbook_dir }}/docker-compose.yml"
+        dest: /ai-tools/docker-compose.yml
+
+    - name: Generate .env file from vault lookup
+      copy:
+        dest: /ai-tools/.env
+        content: |
+          {% for key, value in vault_secrets.items() %}
+          {{ key }}={{ value }}
+          {% endfor %}
+
+    - name: Start services
+        docker_stack:
+          state: present
+          name: ai-tools
+          compose:
+            - /ai-tools/docker-compose.yml
+
