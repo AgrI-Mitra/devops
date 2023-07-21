@@ -10,7 +10,7 @@ services:
       - bff_pgdata:/var/lib/postgresql/data
     env_file:
       - ./.env
-  
+
   ts-cache:
     container_name: ts-cache
     image: redis:latest
@@ -38,14 +38,10 @@ services:
     depends_on:
       - bff
     container_name: agrimitra-nginx
-    build: 
+    build:
       context: ./nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    links:
-      - "bff:bff"
-  
+    network_mode: "host"
+
   bff:
     container_name: bff
     depends_on:
