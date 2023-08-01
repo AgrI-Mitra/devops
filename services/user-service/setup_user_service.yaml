@@ -5,7 +5,7 @@
     service_name: user-service
     image_name: ghcr.io/agri-mitra/user-service
     image_tag: master
-    replicas: 1
+    replicas: 0
     container_port: 3000
     published_port: 3005
   tasks:

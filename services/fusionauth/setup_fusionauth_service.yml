@@ -40,7 +40,7 @@
     service_name: fusionauth
     image_name: fusionauth/fusionauth-app
     image_tag: latest
-    replicas: 1
+    replicas: 0
     container_port: 9011
     published_port: 9011
   tasks:

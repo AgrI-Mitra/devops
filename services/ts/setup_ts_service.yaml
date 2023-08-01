@@ -48,7 +48,7 @@
     service_name: ts
     image_name: ghcr.io/agri-mitra/transport-socket
     image_tag: akai
-    replicas: 
+    replicas: 0 
     container_port: 3000
     published_port: 3000
   tasks:
