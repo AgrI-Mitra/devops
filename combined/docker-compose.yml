@@ -11,29 +11,6 @@ services:
     env_file:
       - ./.env
 
-  ts-cache:
-    container_name: ts-cache
-    image: redis:latest
-    env_file:
-      - ./.env
-    ports:
-      - '6379:6379'
-    command: [ 'redis-server', '--appendonly', 'yes' ]
-    hostname: redis
-    volumes:
-      - redis_data:/data
-      - redis_conf:/usr/local/etc/redis/redis.conf
-
-  ts:
-    container_name: ts
-    depends_on:
-      - ts-cache
-    image: ghcr.io/agri-mitra/transport-socket:akai
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./.env
-
   agrimitra-nginx:
     depends_on:
       - bff
@@ -54,18 +31,26 @@ services:
     env_file:
       - ./.env
 
-  app:
-    container_name: app
-    depends_on:
-      - bff
-    image: ghcr.io/agri-mitra/app:production
+  text_translation_bhashini:
+    container_name: text_translation_bhashini
+    image: ghcr.io/samagra-development/ai-tools/text_translation_bhashini:latest
     restart: always
     ports:
-      - "8080:3000"
-    env_file:
-      - ./.env
+      - "8001:8000"
+
+  text_lang_detection_bhashini:
+    container_name: text_lang_detection_bhashini
+    image: ghcr.io/samagra-development/ai-tools/text_lang_detection_bhashini:latest
+    restart: always
+    ports:
+      - "8002:8000"
+
+  text_classification_grievance_recognition:
+    container_name: text_classification_grievance_recognition
+    image: ghcr.io/samagra-development/ai-tools/text_classification_grievance_recognition:latest
+    restart: always
+    ports:
+      - "8003:8000"
 
 volumes:
   bff_pgdata:
-  redis_data:
-  redis_conf:
