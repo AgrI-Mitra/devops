@@ -23,7 +23,6 @@ services:
     container_name: bff
     depends_on:
       - bff_timescaledb
-      - ts
     image: ghcr.io/agri-mitra/bff:main
     restart: always
     ports:
