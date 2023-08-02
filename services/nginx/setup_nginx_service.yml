@@ -19,25 +19,25 @@
 
     - name: Create a certificates dir if it does not exist
       ansible.builtin.file:
-        path: /nginx/certificates
+        path: /home/ubuntu/nginx/certificates
         state: directory
         mode: '0755'
     
     - name: Create a agrimitra.samagra.io dir if it does not exist
       ansible.builtin.file:
-        path: /nginx/certificates/agrimitra.samagra.io
+        path: /home/ubuntu/nginx/certificates/agrimitra.samagra.io
         state: directory
         mode: '0755'
     
     - name: Create fullchain.pem
       copy:
-        dest: /nginx/certificates/agrimitra.samagra.io/fullchain.pem
+        dest: /home/ubuntu/nginx/certificates/agrimitra.samagra.io/fullchain.pem
         content: |
           {{ fullchain }}
     
     - name: Create privkey.pem
       copy:
-        dest: /nginx/certificates/agrimitra.samagra.io/privkey.pem
+        dest: /home/ubuntu/nginx/certificates/agrimitra.samagra.io/privkey.pem
         content: |
           {{ privkey }}
 
