@@ -4,6 +4,10 @@ services:
     container_name: text_classification_grievance_recognition
     image: ghcr.io/samagra-development/ai-tools/text_classification_grievance_recognition:latest
     restart: always
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
     ports:
       - "8003:5000"
     env_file:
