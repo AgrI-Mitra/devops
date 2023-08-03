@@ -1,0 +1,22 @@
+- name: Setup stateful services
+  hosts: _manager
+  become: true
+  tasks:
+    - name: Create a portainer dir if it does not exist
+      ansible.builtin.file:
+        path: /portainer
+        state: directory
+        mode: "0755"
+
+    - name: Copy file from host to machine
+      copy:
+        src: "{{ playbook_dir }}/docker-compose.yml"
+        dest: /portainer/docker-compose.yml
+
+    - name: Start services
+      docker_stack:
+        state: present
+        name: portainer
+        compose:
+          - /portainer/docker-compose.yml
+
