@@ -9,8 +9,8 @@
     container_port: 443
     published_port: 443
     env_vars: 
-    fullchain: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx:fullchain') }}"
-    privkey: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/nginx:privkey') }}"
+    fullchain: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/nginx:fullchain') }}"
+    privkey: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/nginx:privkey') }}"
   tasks:
     - name: Copy file from host to machine
       copy:

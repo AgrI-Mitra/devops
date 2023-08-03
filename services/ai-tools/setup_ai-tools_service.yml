@@ -2,7 +2,7 @@
   hosts: _manager
   become: true
   vars:
-    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/prod/ai-tools url=http://10.3.1.5:8200') }}"
+    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/ai-tools url=http://10.3.1.5:8200') }}"
   tasks:
     - name: Create a ai-tools dir if it does not exist
       ansible.builtin.file:
