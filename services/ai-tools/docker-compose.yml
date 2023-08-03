@@ -1,24 +1,5 @@
 version: '3.6'
 services:
-  text_translation_bhashini:
-    container_name: text_translation_bhashini
-    image: ghcr.io/samagra-development/ai-tools/text_translation_bhashini:latest
-    restart: always
-    ports:
-      - "8001:8000"
-    env_file:
-      - ./.env
-      
-
-  text_lang_detection_bhashini:
-    container_name: text_lang_detection_bhashini
-    image: ghcr.io/samagra-development/ai-tools/text_lang_detection_bhashini:latest
-    restart: always
-    ports:
-      - "8002:8000"
-    env_file:
-      - ./.env    
-
   text_classification_grievance_recognition:
     container_name: text_classification_grievance_recognition
     image: ghcr.io/samagra-development/ai-tools/text_classification_grievance_recognition:latest
