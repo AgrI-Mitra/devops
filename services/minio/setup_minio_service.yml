@@ -1,0 +1,32 @@
+- name: Setup stateful services
+  hosts: _manual
+  become: true
+  vars:
+    vault_secrets: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=secret/data/minio') }}"
+  tasks:
+    - name: Create a minio dir if it does not exist
+      ansible.builtin.file:
+        path: /minio
+        state: directory
+        mode: "0755"
+
+    - name: Copy file from host to machine
+      copy:
+        src: "{{ playbook_dir }}/docker-compose.yml"
+        dest: /minio/docker-compose.yml
+
+    - name: Generate .env file from vault lookup
+      copy:
+        dest: /minio/.env
+        content: |
+          {% for key, value in vault_secrets.items() %}
+          {{ key }}={{ value }}
+          {% endfor %}  
+
+    - name: Create and start services
+      community.docker.docker_compose:
+        project_src: /minio/
+      register: output
+
+    - debug:
+        var: output
