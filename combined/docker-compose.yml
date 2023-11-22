@@ -23,7 +23,7 @@ services:
     container_name: bff
     depends_on:
       - bff_timescaledb
-    image: ghcr.io/agri-mitra/bff:main
+    image: ghcr.io/agri-mitra/bff:${BRANCH}
     restart: always
     ports:
       - "8081:3000"
