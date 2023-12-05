@@ -63,7 +63,7 @@
   vars:
     service_name: bff
     image_name: ghcr.io/agri-mitra/bff
-    image_tag: main
+    image_tag: dev
     replicas: 1
     container_port: 3000
     published_port: 8081
