@@ -38,7 +38,7 @@
   become: true
   vars:
     image_name: ghcr.io/agri-mitra/bff
-    image_tag: main
+    image_tag: dev
   tasks:
     - name: Login to Github Packages Registry
       community.docker.docker_login:
